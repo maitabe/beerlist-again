@@ -7,7 +7,6 @@ app.controller('MainCtrl', function($scope, $http) {
 	$http.get('/beers').success(function (data) {
     // this copies the response posts to the client side
     // 'beers' under 'beerService'
-
     console.log(data);
 
     angular.copy(data, $scope.beers);
@@ -35,11 +34,15 @@ app.controller('MainCtrl', function($scope, $http) {
 	};
 
 	$scope.removeBeer = function(index) {
-		$scope.beers.splice(index, 1);
+		// $scope.beers.splice(index, 1);
+		var beer = $scope.beers[index]
+		console.log(beer._id);
 
-		// $http.delete('/beers' + index, function() {
+		$http.delete('/beers/' + beer._id).success(function(data) {
 
-		// });
+			console.log(data);;
+
+		});
 	};
 
 });

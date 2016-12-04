@@ -23,7 +23,7 @@ app.get('/beers', function(req, res, next) {
 		}
 	});
 
-	Beer.remove();
+	// Beer.remove();
 });
 
 app.post('/beers', function(req, res, next) {
@@ -42,7 +42,24 @@ app.post('/beers', function(req, res, next) {
 
 });
 
-app.delete('/beers', function(req, res){
+app.delete('/beers/:id', function(req, res, next){
+	//send the beer id through the req.params.id
+	var beerId =  req.params.id;
+	console.log('this is the ' + beerId)
+
+	//find the beer by id
+	Beer.find(beerId, function(err, beersInDB) {
+		if(err) {
+			return next(err);
+			res.send({status:'error'});
+		}
+		//delete that beer from the database
+		beersInDB.remove(function(err) {
+			if(err) { return next(err); res.send({status:'error'});}
+			console.log('deleted');
+			res.send({status:'ok'});
+		});
+	});
 
 });
 
