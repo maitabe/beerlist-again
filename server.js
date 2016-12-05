@@ -3,9 +3,11 @@ var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/beers');
+mongoose.Promise = global.Promise;
 
 var Beer = require('./BeerModel');
 
+var port = 8000;
 var app = express();
 
 app.use(bodyParser.json());
@@ -31,6 +33,7 @@ app.post('/beers', function(req, res, next) {
 
 	var beer = new Beer(req.body);
 
+// was beer
 	beer.save(function(err, beer) {
 		if(err) {
 			return next(err);
@@ -45,17 +48,20 @@ app.post('/beers', function(req, res, next) {
 app.delete('/beers/:id', function(req, res, next){
 	//send the beer id through the req.params.id
 	var beerId =  req.params.id;
-	console.log('this is the ' + beerId)
+	console.log('this is the ' + beerId);
 
 	//find the beer by id
 	Beer.find(beerId, function(err, beersInDB) {
+		console.log(beersInDB);
 		if(err) {
 			return next(err);
-			res.send({status:'error'});
+			// res.send({status:'error'});
 		}
 		//delete that beer from the database
-		beersInDB.remove(function(err) {
-			if(err) { return next(err); res.send({status:'error'});}
+		Beer.remove(beerId, function(err) {
+			// was beer.name
+			console.log(beerId, beersInDB.name + 'is been removed');
+			if(err) { return next(err); }
 			console.log('deleted');
 			res.send({status:'ok'});
 		});
@@ -63,4 +69,7 @@ app.delete('/beers/:id', function(req, res, next){
 
 });
 
-app.listen(8000);
+// start application server
+app.listen(port, function(){
+	console.log('server start, listening on', port);
+});

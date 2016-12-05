@@ -35,12 +35,12 @@ app.controller('MainCtrl', function($scope, $http) {
 
 	$scope.removeBeer = function(index) {
 		// $scope.beers.splice(index, 1);
-		var beer = $scope.beers[index]
-		console.log(beer._id);
+		var beer = $scope.beers[index];
+		console.log(beer._id, beer.name);
 
 		$http.delete('/beers/' + beer._id).success(function(data) {
-
-			console.log(data);;
+			console.log(beer._id + 'name: ' + beer.name + 'has been removed');
+			console.log(data);
 
 		});
 	};
