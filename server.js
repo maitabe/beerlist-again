@@ -16,60 +16,57 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 app.use('/node_modules', express.static('node_modules'));
 
+//collect data in the db and send back to the http get
 app.get('/beers', function(req, res, next) {
+	//find all data in the DB - beerinDB is the responds to send back
 	Beer.find({}, function(err, beersInDB){
 		if(err) {
 			return next(err);
 		}else{
+			//send data to http.get
 			res.send(beersInDB);
 		}
 	});
-
-	// Beer.remove();
 });
 
 app.post('/beers', function(req, res, next) {
 	console.log(req.body);
-
+	//create a new beer with constructor
 	var beer = new Beer(req.body);
 
-// was beer
+	console.log('added a beer' + beer);
+// save beer to the server
 	beer.save(function(err, beer) {
+		console.log('beer saved ' + beer);
 		if(err) {
 			return next(err);
 		}else{
 			res.send(beer);
 		}
 	});
-
-
 });
 
-app.delete('/beers/:id', function(req, res, next){
+app.delete('/beers/:id', function(req, res){
 	//send the beer id through the req.params.id
 	var beerId =  req.params.id;
 	console.log('this is the ' + beerId);
 
-	//find the beer by id
-	Beer.find(beerId, function(err, beersInDB) {
-		console.log(beersInDB);
-		if(err) {
-			return next(err);
-			// res.send({status:'error'});
-		}
 		//delete that beer from the database
-		Beer.remove(beerId, function(err) {
-			// was beer.name
-			console.log(beerId, beersInDB.name + 'is been removed');
-			if(err) { return next(err); }
-			console.log('deleted');
-			res.send({status:'ok'});
+		Beer.remove({_id:beerId}, function(err) {
+			if(err) { res.send(err); }
+			console.log('deleted' + beerId);
+			//process MUST end with the respond
+			res.end();
 		});
-	});
-
 });
 
 // start application server
 app.listen(port, function(){
 	console.log('server start, listening on', port);
 });
+
+
+
+
+
+
