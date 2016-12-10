@@ -29,6 +29,7 @@ app.get('/beers', function(req, res, next) {
 	});
 });
 
+//
 app.post('/beers', function(req, res, next) {
 	console.log(req.body);
 	//create a new beer with constructor
@@ -58,6 +59,18 @@ app.delete('/beers/:id', function(req, res){
 			//process MUST end with the respond
 			res.end();
 		});
+});
+
+app.put('/beers/:id', function(req, res){
+	console.log('this is the ' + beerId);
+	var beerId =  req.params.id;
+
+
+	Beer.save(function(err) {
+		if(err) {res.send(err);}
+		console.log(beerId + 'has been updated');
+		res.send();
+	});
 });
 
 // start application server

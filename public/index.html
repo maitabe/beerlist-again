@@ -14,6 +14,7 @@
 
       <div ng-repeat="beer in beers track by $index">
         <div class="beer">
+        <i ng-click="removeBeer($index)" class="fa fa-times remove"></i>
           <div class="img-container">
             <img ng-src="{{beer.image_url}}"/>
           </div>
@@ -22,8 +23,7 @@
             <p class="beer-name">{{beer.name}}</p>
             <p>{{beer.style}} - {{beer.abv}}% ABV</p>
           </div>
-
-          <i ng-click="removeBeer($index)" class="fa fa-times remove"></i>
+          <button type="button" class="btn btn-secondary" ng-click="updateBeer($index)">Edit</button>
         </div>
       </div>
 
@@ -46,7 +46,7 @@
           <input type="text" class="form-control" placeholder="Image URL" ng-model="image_url"></input>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="submit" class="btn btn-primary" >{{!editing ? 'Add' : 'Update'}}</button>
       </form>
     </div>
   </div>
