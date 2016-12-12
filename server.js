@@ -5,7 +5,9 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/beers');
 mongoose.Promise = global.Promise;
 
-var Beer = require('./BeerModel');
+var Beer = require('./models/BeerModel');
+var Review = require('./models/ReviewModel');
+// console.log(Beer);
 
 var port = 8000;
 var app = express();
@@ -18,20 +20,21 @@ app.use('/node_modules', express.static('node_modules'));
 
 //collect data in the db and send back to the http get
 app.get('/beers', function(req, res, next) {
+	console.log("get all beers");
 	//find all data in the DB - beerinDB is the responds to send back
 	Beer.find({}, function(err, beersInDB){
 		if(err) {
 			return next(err);
 		}else{
 			//send data to http.get
-			res.send(beersInDB);
+			res.json(beersInDB);
 		}
 	});
 });
 
 //
 app.post('/beers', function(req, res, next) {
-	console.log(req.body);
+	console.log(req.bodyParsery);
 	//create a new beer with constructor
 	var beer = new Beer(req.body);
 
@@ -47,6 +50,31 @@ app.post('/beers', function(req, res, next) {
 	});
 });
 
+//adding a review
+app.post('/beers/:id/reviews', function(req, res, next) {
+	console.log("HADSA");
+	Beer.findById(req.params.id, function(err, beer) {
+		if(err) {return next (err);}
+
+		var review = new Review(req.body);
+console.log(beer);
+		review.save(function(err, review) {
+			if(err) {return next(err);}
+
+			beer.reviews.push(review);
+console.log(review);
+
+			beer.save(function (err, beer) {
+				if(err) {return next(err);}
+console.log(beer);
+
+				res.json(beer);
+			});
+		});
+	});
+});
+
+//delete post
 app.delete('/beers/:id', function(req, res){
 	//send the beer id through the req.params.id
 	var beerId =  req.params.id;
@@ -75,7 +103,7 @@ app.put('/beers/:id', function(req, res){
 
 // start application server
 app.listen(port, function(){
-	console.log('server start, listening on', port);
+	console.log('beers server start, listening on', port);
 });
 
 

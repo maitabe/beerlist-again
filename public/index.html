@@ -24,6 +24,11 @@
             <p>{{beer.style}} - {{beer.abv}}% ABV</p>
           </div>
           <button type="button" class="btn btn-secondary" ng-click="updateBeer($index)">Edit</button>
+          <div class="comment">
+	          <input type="text" id="comment" class="title comment-form" placeholder="User name" ng-model="username"></input>
+	          <input type="text" id="comment" class="title comment-form" placeholder="Write a review" ng-model="userReview"></input>
+          </div>
+          <button type="submit" class="btn btn-primary comment" id="comment" style="background-color:green;" ng-click="addReview()">Add Review</button>
         </div>
       </div>
 
