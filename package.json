@@ -11,10 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "angular": "^1.5.9",
+    "angular-ui-router": "^0.3.2",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",
-    "mongoose": "^4.7.1"
+    "mongoose": "^4.7.1",
+    "ui-router": "^1.0.0-alpha.3"
   }
 }

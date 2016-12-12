@@ -26,15 +26,16 @@ app.get('/beers', function(req, res, next) {
 		if(err) {
 			return next(err);
 		}else{
-			//send data to http.get
+			//send data back to http.get in the client side app.js
 			res.json(beersInDB);
 		}
 	});
 });
 
-//
+//add a new beer
 app.post('/beers', function(req, res, next) {
-	console.log(req.bodyParsery);
+	// console.log(req.bodyParser);
+
 	//create a new beer with constructor
 	var beer = new Beer(req.body);
 
@@ -52,22 +53,24 @@ app.post('/beers', function(req, res, next) {
 
 //adding a review
 app.post('/beers/:id/reviews', function(req, res, next) {
-	console.log("HADSA");
+
 	Beer.findById(req.params.id, function(err, beer) {
 		if(err) {return next (err);}
 
+		//create a new review
 		var review = new Review(req.body);
 console.log(beer);
+		//save the new review to the DB to the selected beer
 		review.save(function(err, review) {
 			if(err) {return next(err);}
-
+			//push the review to the beer object, added to the review property
 			beer.reviews.push(review);
 console.log(review);
-
+			//save the beer with the already added review to the DB
 			beer.save(function (err, beer) {
 				if(err) {return next(err);}
 console.log(beer);
-
+				//finish the process and sent this responds to the client side app.js
 				res.json(beer);
 			});
 		});
@@ -89,6 +92,7 @@ app.delete('/beers/:id', function(req, res){
 		});
 });
 
+//update a beer
 app.put('/beers/:id', function(req, res){
 	console.log('this is the ' + beerId);
 	var beerId =  req.params.id;
